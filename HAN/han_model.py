@@ -6,7 +6,7 @@ class TextConfig(object):
 
     vocab_size = 6000 # 整篇文章有多少个词
 
-    seq_length=200
+    seq_length=7
     num_classes=10
 
 
