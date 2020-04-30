@@ -9,3 +9,5 @@ out
 gen
 /venv/
 !/NNgetStarted/test.py
+/text_rnn_attention/
+/HAN/data/
