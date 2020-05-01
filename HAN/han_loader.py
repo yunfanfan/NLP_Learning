@@ -47,7 +47,7 @@ def read_file(filename):
     return labels, contents
 
 
-def han_read_file(filename):
+def han_read_file(filename, max_sent_in_doc, max_word_in_sent):
     """
     Args:
         filename:trian_filename,test_filename,val_filename
@@ -56,7 +56,6 @@ def han_read_file(filename):
 
     """
     re_han = re.compile(u"([\u4E00-\u9FD5a-zA-Z0-9+#&\._%]+)")  # the method of cutting text by punctuation
-    #re_han2 = re.compile(u"()")
 
     with codecs.open('./data/stopwords.txt', 'r', encoding='utf-8') as f:
         # 列表解析
@@ -76,8 +75,6 @@ def han_read_file(filename):
                 # word[]存的是分词后的内容，一个句子
                 word = []
                 essay = []
-                max_sent_in_doc = 30
-                max_word_in_sent = 8
                 i = 0
                 j = 0
                 #for i in range(max_sent_in_doc):
@@ -179,7 +176,7 @@ def read_category():
     cat_to_id = dict(zip(categories, range(len(categories))))
     return categories, cat_to_id
 
-def han_process_file(filename, word_to_id, cat_to_id, max_length=15):
+def han_process_file(filename, word_to_id, cat_to_id, max_word_in_sent=15, max_sent_in_doc=30):
     """
     Args:
         filename:train_filename or test_filename or val_filename
@@ -191,7 +188,7 @@ def han_process_file(filename, word_to_id, cat_to_id, max_length=15):
         y_pad: sequence data from preprocessing label
 
     """
-    labels, contents = han_read_file(filename)
+    labels, contents = han_read_file(filename, max_sent_in_doc, max_word_in_sent)
     data_id, label_id = [], []
     for i in range(len(contents)):
         data_sent_id = []
@@ -199,7 +196,7 @@ def han_process_file(filename, word_to_id, cat_to_id, max_length=15):
             # word_to_id词在dic中的id位置，把文中的一个一个的词转换成我们词表中对应的数字
             data_sent_id.append([word_to_id[x] for x in contents[i][j] if x in word_to_id])
         # pad_sequences:将多个序列截断或补齐为相同长度。
-        data_sent_id = kr.preprocessing.sequence.pad_sequences(data_sent_id, max_length, padding='post', truncating='post')
+        data_sent_id = kr.preprocessing.sequence.pad_sequences(data_sent_id, max_word_in_sent, padding='post', truncating='post')
         data_id.append(data_sent_id)
         label_id.append(cat_to_id[labels[i]])
     # 将整型标签转为onehot
