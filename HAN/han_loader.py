@@ -176,7 +176,7 @@ def read_category():
     cat_to_id = dict(zip(categories, range(len(categories))))
     return categories, cat_to_id
 
-def han_process_file(filename, word_to_id, cat_to_id, max_word_in_sent=15, max_sent_in_doc=30):
+def han_process_file(filename, word_to_id, cat_to_id, max_sent_in_doc=30, max_word_in_sent=10):
     """
     Args:
         filename:train_filename or test_filename or val_filename
@@ -243,9 +243,16 @@ def batch_iter(x, y, batch_size=64):
     data_len = len(x)
     num_batch = int((data_len - 1) / batch_size) + 1
 
-    indices = np.random.permutation(np.arange(data_len))
-    x_shuffle = x[indices]
-    y_shuffle = y[indices]
+    x_shuffle = [[]]
+    #indices = np.random.permutation(np.arange(data_len))
+    #x_shuffle = x[indices]
+    #y_shuffle = y[indices]
+    state = np.random.get_state()
+    np.random.shuffle(x)
+    x_shuffle = np.copy(x)
+    np.random.get_state(state)
+    np.random.shuffle(y)
+    y_shuffle = np.copy(y)
 
     for i in range(num_batch):
         start_id = i * batch_size

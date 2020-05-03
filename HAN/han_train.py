@@ -12,7 +12,9 @@ def feed_data(x_batch, y_batch, keep_prob):
         model.input_x: x_batch,
         model.input_y: y_batch,
         model.keep_prob:keep_prob,
-        model.sequence_lengths: sequence_lengths
+        model.sequence_lengths: sequence_lengths,
+        model.max_sentence_length:8,
+        model.max_sentence_num:30
     }
     return feed_dict
 
@@ -29,9 +31,9 @@ def train():
 
     print("Loading training and validation data...")
     start_time = time.time()
-    #x_train, y_train = process_file(config.train_filename, word_to_id, cat_to_id, config.seq_length)
+    #x_train, y_train = han_process_file(config.train_filename, word_to_id, cat_to_id, config.seq_length)
     x_train, y_train = han_process_file(config.test,word_to_id,cat_to_id,config.max_sent_in_doc,config.max_word_in_sent)
-    #x_val, y_val = process_file(config.val_filename, word_to_id, cat_to_id, config.seq_length)
+    #x_val, y_val = han_process_file(config.val_filename, word_to_id, cat_to_id, config.seq_length)
     x_val, y_val = han_process_file(config.test,word_to_id,cat_to_id,config.max_sent_in_doc,config.max_word_in_sent)
     print("Time cost: %.3f seconds...\n" % (time.time() - start_time))
 
